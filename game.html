@@ -1,0 +1,252 @@
+<html>
+	<head>
+	<link rel="stylesheet" href="jquery-ui.css">
+	<script  src="jquery-3.2.1.min.js"></script>
+	<script src="jquery-ui.js"></script>
+	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"/>
+  	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+		<style>
+		
+			.box{
+				width:200px;
+				height:50px;
+				border:3px solid red;
+			}
+			.text{
+				font-family:verdana;
+				color:blue;
+				font-size:200%;
+			}
+			.boxtext{
+				font-family:verdana;
+				color:blue;
+				font-size:120%;	
+				text-align:center;
+				font-weight: bold;
+			}
+			.removeClick{
+				pointer-events:none;
+			}
+			body{
+				background-color: #87CEEB;
+			}
+		</style>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				setTimeout(myFunction, 61000);
+				function myFunction(){
+					$("#timeout").modal("show");
+					clearInterval(refreshIntervalId);
+				}
+				var initialTime = Date.now();
+
+				function checkTime(){
+  					var timeDifference = Date.now() - initialTime;
+  					var totalSeconds = 60 - Math.floor(timeDifference/1000);
+  					document.getElementById('seconds').innerHTML = '' + totalSeconds;
+				}
+
+				var refreshIntervalId = window.setInterval(checkTime, 1000);
+
+				//alert(window.location.search);	
+				var query = window.location.search;
+				var username = query.substring(query.indexOf("usr")+4);
+				document.getElementById("user").innerHTML = "Welcome " + username;
+				var questionList = [{'ques' :'Capital Of Germany', ans: 'Berlin'},{'ques' : 'Capital Of Russia', ans : 'Moscow'},{'ques' :'Capital Of Egypt', ans: 'Cairo'},{ques : 'Capital Of Iraq', ans : 'Baghdad'},
+				{'ques' :'Capital Of Thailand', ans: 'Bangkok'},{ques : 'Capital Of Bhutan', ans : 'Thimpu'},
+				{'ques' :'Capital Of Sri Lanka', ans: 'Colombo'},{ques : 'Capital Of Bangladesh', ans : 'Dhaka'},
+				{'ques' :'Capital Of Nepal', ans: 'Kathmandu'},{ques : 'Capital Of China', ans : 'Beijing'}]
+				var answerList = [];
+				score = 0;
+				chances = 2;
+				document.getElementById("score").innerHTML = score;
+				document.getElementById("chances").innerHTML = chances;
+				//var div1 = {};
+				//var div2 = {};
+				div1 = {};
+				div2 = {};
+				$(".box").click(function(){
+				
+				if(jQuery.isEmptyObject(div1)){
+					div1 = $(this);
+					div1.fadeTo(1000, 0.15);
+					//div1.unbind("click");
+					//div1.off('click');
+					div1.addClass('removeClick'); //This line is the key!
+
+				}
+				else{
+					div2 = $(this);
+					//div2.fadeTo(1000, 0.15);
+					//div2.off('click');
+					//div2.unbind("click");
+					div2.addClass('removeClick');
+
+				}
+					
+				
+					//alert("div1:"+div1);
+					//alert("div2:"+div2);
+					
+					//alert("div1: "+div1);
+					//alert("div2: "+div2);
+					
+					var answer = $(this).html();
+					answerList.push(answer);
+					//alert("ans :: "+JSON.stringify(answerList));
+					if(answerList.length == 2){
+						//alert("div1:"+div1.html());
+						//alert("div2:"+div2.html());
+						
+						var flag = 0;
+						for(var obj in questionList){
+							if((questionList[obj].ques === answerList[0] && questionList[obj].ans === answerList[1]) || questionList[obj].ques === answerList[1] && questionList[obj].ans === answerList[0])
+								flag = 1;
+							//alert("ques:: "+obj.ques);
+							//alert("ans:: "+obj.ans);
+						}
+						if(flag == 1){
+							div1.css('visibility','hidden');
+							div2.css('visibility','hidden');
+							score+=10;
+							if(score == 100){
+								 $("#won").modal('show'); 
+							}
+						}
+						else{
+							//div1.bind("click");
+							//div2.bind("click");
+							div2.removeClass('removeClick');
+							div1.removeClass('removeClick');
+							div1.css('opacity',1);
+							div2.css('opacity',1);
+							//div2.fadeIn();
+							div1.effect("shake");
+							div2.effect("shake");
+							chances-=1;
+
+							document.getElementById("chances").innerHTML = chances;
+							$("#chances").effect("shake");
+							if(chances == 0)
+								$("#lose").modal('show');
+						}
+						//	alert("Wrong");
+						/*if(questionList.answerList[0] === answerList[0]] 
+							alert("Correct");
+						else
+							alert("Wrong");*/
+						answerList = [];
+						div1 = {};
+						div2 = {};
+						document.getElementById("score").innerHTML = score;
+					}
+						
+				});
+			});
+			
+		</script>
+	</head>
+	<body>
+	<br>
+	<br>
+	<div class="col-md-4 col-md-offset-4 boxtext" id="user"></div>
+	<div class="col-md-4 boxtext">Time left:<span id="seconds">60</span> seconds</div><br>
+
+	<br><br>
+	
+	<div class="container">
+		<div class="col-md-3">
+			<div class="box boxtext">Dhaka</div><br>
+			<div class="box boxtext">Cairo</div><br>
+			<div class="box boxtext">Colombo</div><br>
+			<div class="box boxtext">Capital Of Thailand</div><br>
+			<div class="box boxtext">Capital Of Nepal</div>
+		</div>
+		<div class="col-md-3">
+			<div class="box boxtext">Berlin</div><br>
+			<div class="box boxtext">Capital Of Germany</div><br>
+			<div class="box boxtext">Capital Of Bhutan</div><br>
+			<div class="box boxtext">Baghdad</div><br>
+			<div class="box boxtext">Capital Of Egypt</div>
+		</div>
+		<div class="col-md-3">
+			<div class="box boxtext">Kathmandu</div><br>
+			<div class="box boxtext">Capital Of Iraq</div><br>
+			<div class="box boxtext">Bangkok</div><br>
+			<div class="box boxtext">Capital Of Sri Lanka</div><br>
+			<div class="box boxtext">Capital Of China</div>
+		</div>
+		<div class="col-md-3">
+			<div class="box boxtext">Capital Of Russia</div><br>
+			<div class="box boxtext">Beijing</div><br>
+			<div class="box boxtext">Capital Of Bangladesh</div><br>
+			<div class="box boxtext">Moscow</div><br>
+			<div class="box boxtext">Thimpu</div>
+		</div>
+		<br><br><br>
+		<div class = "col-md-2 col-md-offset-5 text">Score:<span id ="score"></span></div>
+		<div class = "col-md-2 col-md-offset-5 text">Life Left:<span id="chances"></span></div>
+	</div>
+	<div class="modal fade" id="won" role="dialog">
+    <div class="modal-dialog modal-sm">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <!-- <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Modal Header</h4>
+        </div> -->
+        <div class="modal-body">
+          <p class="boxtext">Congrats!! You Won</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="location.reload();">Replay</button>
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  <div class="modal fade" id="lose" role="dialog">
+    <div class="modal-dialog modal-sm">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <!-- <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Modal Header</h4>
+        </div> -->
+        <div class="modal-body">
+          <p class="boxtext">You Lose!!</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="location.reload();">Replay</button>
+          <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="window.close();">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  <div class="modal fade" id="timeout" role="dialog">
+    <div class="modal-dialog modal-sm">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <!-- <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Modal Header</h4>
+        </div> -->
+        <div class="modal-body">
+          <p class="boxtext">Time Over!!</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="location.reload();">Replay</button>
+          <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="window.close();">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+</div>
+	</body>
+</html>
